@@ -1,2 +1,2 @@
 # rust-player
-Media Player written in safe Rust.
+Media Player based on Rust Engine and JavaFx GUI
