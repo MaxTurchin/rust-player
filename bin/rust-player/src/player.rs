@@ -2,12 +2,17 @@ use cpal::PlayStreamError;
 
 use crate::playback::{Playback, PlaybackStatus};
 use crate::queue::PlayQueue;
+use crate::track::Track;
 
+use crate::*;
+
+use std::sync::mpsc::{channel, Receiver};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, sleep};
 use std::time;
 
 pub struct Player {
+    current_track: Box<Option<Track>>,
     status: Arc<Mutex<PlaybackStatus>>,
     playback: Arc<Mutex<Playback>>,
     queue: Arc<Mutex<PlayQueue>>,
@@ -20,6 +25,7 @@ impl Player {
         let queue = Arc::new(Mutex::new(PlayQueue::new()));
 
         Self {
+            current_track: Box::new(None),
             status: status,
             playback: playback,
             queue: queue,
@@ -43,27 +49,31 @@ impl Player {
         self.queue = queue;
     }
 
-    pub fn play_queue(&self) {
+    pub fn play_queue(&self) -> Receiver<Option<Track>>{
         let queue = self.queue.clone();
         let playback = self.playback.clone();
         let status = self.status.clone();
+
+        let (tx, rx) = channel::<Option<Track>>();
+        //Sends current Track once playback of new track is started
         thread::spawn(move || {
             println!("Spawned play_queue thread");
             loop {
                 while !queue.lock().unwrap().is_empty() {
                     if *status.lock().unwrap() == PlaybackStatus::Stopped {
-                        let fpath = match queue.lock().unwrap().get_next() {
-                            Some(fp) => fp,
+                        let track = match queue.lock().unwrap().get_next() {
+                            Some(t) => t,
                             None => {
                                 continue;
                             }
                         };
-
-                        playback.lock().unwrap().start_playback(&fpath);
+                        playback.lock().unwrap().start_playback(&track.fpath);
+                        tx.send(Some(track.clone()));
                     }
                 }
                 sleep(time::Duration::from_micros(250));
             }
         });
+        return rx
     }
 }

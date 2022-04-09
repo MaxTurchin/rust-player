@@ -97,7 +97,7 @@ fn playback_clb<T: cpal::Sample>(
             *sample = Sample::from(&0.0);
             continue;
         }
-        *sample = match samples_rx.try_recv() {
+        *sample = match samples_rx.recv() {
             Ok(s) => s,
             Err(_) => { //RecvErr means that the channel is empty and the playback is done.
                 *status_data = PlaybackStatus::Stopped;

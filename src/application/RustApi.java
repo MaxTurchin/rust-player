@@ -1,34 +1,35 @@
 package application;
 
 public class RustApi {
-	private long player_ptr;
-	private long queue_ptr;
+	private static PlayerEvents events;
+	private static long player_ptr;
+	private static long queue_ptr;
 	
-	private static native long[] rInit();			
-	private native void rPlayOrPause(long ptr);
-	private native void rAddToQueue(long ptr, String fpath);
+	private static native long[] rInit(RustApi callback);
+	private native static void rPlayOrPause(long ptr);
+	private native static void rAddToQueue(long ptr, String fpath);
 
 	static {
 		System.loadLibrary("rust_player");
 	}
 	
-	public RustApi() {
-		long []ptrs  = rInit();		// Gets raw pointers for [player struct, queue struct]
-		this.player_ptr = ptrs[0];	// Player struct raw pointer
-		this.queue_ptr = ptrs[1];	// Queue struct raw pointer
+	public static void initPlayer(PlayerEvents e) {
+		long []ptrs  = rInit(new RustApi());  // Gets raw pointers for [player struct, queue struct]
+		player_ptr = ptrs[0];			// Player struct raw pointer
+		queue_ptr = ptrs[1];			// Queue struct raw pointer
+		events = e;
 	}
 	
-	public void playOrPause() {
-		this.rPlayOrPause(player_ptr);
+	public static void playOrPause() {
+		rPlayOrPause(player_ptr);
 	}
 	
-	public void addToQueue(String fpath) {
+	public static void addToQueue(String fpath) {
 		System.out.println("added " + fpath);
-		this.rAddToQueue(this.queue_ptr, fpath);
+		rAddToQueue(queue_ptr, fpath);
 	}
 	
-//	public void print_content() {
-//		System.out.println(this.get_content(this.ptr));
-//	}
-	
+	public void updateNowPlaying(String title, String artist, String album) {
+		events.updateNowPlaying(title, artist, album);
+	}
 }

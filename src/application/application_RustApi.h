@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     application_RustApi
  * Method:    rInit
- * Signature: ()[J
+ * Signature: (Lapplication/RustApi;)[J
  */
 JNIEXPORT jlongArray JNICALL Java_application_RustApi_rInit
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     application_RustApi
@@ -21,7 +21,7 @@ JNIEXPORT jlongArray JNICALL Java_application_RustApi_rInit
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_application_RustApi_rPlayOrPause
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     application_RustApi
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_application_RustApi_rPlayOrPause
  * Signature: (JLjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_application_RustApi_rAddToQueue
-  (JNIEnv *, jobject, jlong, jstring);
+  (JNIEnv *, jclass, jlong, jstring);
 
 #ifdef __cplusplus
 }
