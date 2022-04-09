@@ -8,7 +8,9 @@ edition = "2021"
 [dependencies]
 cpal = "0.13.4"
 minimp3 = "0.5"
+id3 = "1.0.2"
 jni = "0.19.0"
+
 
 [lib]
 crate_type = ["cdylib"]

@@ -9,6 +9,7 @@ pub fn start_decode<T: 'static + cpal::Sample + Send + Sync>(fpath: &String, sam
     
     thread::spawn(move ||{
         loop {
+            println!("decode");
             match dec.next_frame() {
                 Ok(Frame {data, sample_rate, channels, ..}) => {
                     for sample in data {
