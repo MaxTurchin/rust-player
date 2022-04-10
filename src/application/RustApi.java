@@ -7,6 +7,8 @@ public class RustApi {
 	
 	private static native long[] rInit(RustApi callback);
 	private native static void rPlayOrPause(long ptr);
+	private native static void rPlayNext(long ptr);
+	private native static void rPlayPrevious(long ptr);
 	private native static void rAddToQueue(long ptr, String fpath);
 
 	static {
@@ -28,7 +30,15 @@ public class RustApi {
 		System.out.println("added " + fpath);
 		rAddToQueue(queue_ptr, fpath);
 	}
-	
+
+	public static void playNext() {
+		rPlayNext(player_ptr);
+	}
+
+	public static void playPrevious() {
+		rPlayPrevious(player_ptr);
+	}
+
 	public void updateNowPlaying(String title, String artist, String album) {
 		events.updateNowPlaying(title, artist, album);
 	}

@@ -60,14 +60,22 @@ public class PlayerEvents implements Initializable{
 	public void playPause(ActionEvent e) {
 		System.out.println("play pause");
 		RustApi.playOrPause();
+
+		if (playPause.getText() == "Play") {
+			playPause.setText("Pause");
+		} else {
+			playPause.setText("Play");
+		}
 	}
 	
 	public void previous(ActionEvent e) {
 		System.out.println("play previous");
+		RustApi.playPrevious();
 	}
 	
 	public void next(ActionEvent e) {
 		System.out.println("play next");
+		RustApi.playNext();
 	}
 
 	

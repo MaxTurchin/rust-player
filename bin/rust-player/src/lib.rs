@@ -73,6 +73,30 @@ pub extern "system" fn Java_application_RustApi_rAddToQueue(
     }
 }
 
+#[no_mangle]
+pub extern "system" fn Java_application_RustApi_rPlayNext(
+    env: JNIEnv,
+    _class: JClass,
+    player: jlong
+) {
+    unsafe {
+        let p = &mut *(player as *mut Player);
+        p.play_next();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_application_RustApi_rPlayPrevious(
+    env: JNIEnv,
+    _class: JClass,
+    player: jlong
+) {
+    unsafe {
+        let p = &mut *(player as *mut Player);
+        p.play_previous();
+    }
+}
+
 fn _init_poll_track_info(env: &JNIEnv, obj: JObject, rx: Receiver<Option<Track>>) {
     let jvm = env.get_java_vm().unwrap();
     let clb = env.new_global_ref(obj).unwrap();
