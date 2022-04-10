@@ -36,8 +36,18 @@ impl PlayQueue {
             return None;
         }
         self.current_idx += 1;
+        println!("idx: {}", self.current_idx);
 
         return Some(self.queue[self.current_idx as usize].clone());
+    }
+
+    pub fn set_next_to_previous(&mut self) {
+        //Move current_idx so that previous track is next in playback
+        if self.current_idx - 2 < -1 {
+            self.current_idx -= 1 //Play current song again
+        } else {
+            self.current_idx -= 2; //Play previous song
+        }
     }
 
     pub fn len(&self) -> usize{

@@ -41,6 +41,20 @@ impl Player {
         }
     }
 
+    pub fn play_next(&mut self) {
+        //Once the playback status is Stopped, next song is loaded automatically
+        let mut status = self.status.lock().unwrap();
+        *status = PlaybackStatus::Stopped;
+    }
+
+    pub fn play_previous(&mut self) {
+        let mut queue = self.queue.lock().unwrap();
+        let mut status = self.status.lock().unwrap();
+
+        queue.set_next_to_previous();
+        *status = PlaybackStatus::Stopped;
+    }
+
     pub fn stop(&mut self) {
         *self.status.lock().unwrap() = PlaybackStatus::Stopped;
     }
